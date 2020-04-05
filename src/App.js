@@ -61,7 +61,7 @@ class App extends React.Component {
 
   handleClick(e) {
     e.preventDefault();
-    fetch(`http://192.168.1.158:8080/search/${this.state.barcode}`)
+    fetch(`https://iris-lp-scanner-server.herokuapp.com/search/${this.state.barcode}`)
       .then(response => response.json())
       .then(json => this.setState({
         title: json.title,
