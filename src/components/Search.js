@@ -1,6 +1,7 @@
 // src/components/Search.js
 
 import React from "react";
+import { trackPromise } from 'react-promise-tracker';
 
 class Search extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class Search extends React.Component {
     this.handleBarcodeValue = this.handleBarcodeValue.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleTitleValue = this.handleTitleValue.bind(this);
+    this.cancel = this.cancel.bind(this);
   }
 
   componentDidMount() {
@@ -31,18 +33,23 @@ class Search extends React.Component {
 
   handleClick(e) {
     e.preventDefault();
-    fetch(`https://iris-lp-scanner-server.herokuapp.com/search/${this.state.barcode}`)
-      .then(response => response.json())
-      .then(json => this.setState({
-        title: json.title,
-        barcode: this.state.barcode,
-        image_url: json.cover_image
-      }));
+    trackPromise (
+      fetch(`https://iris-lp-scanner-server.herokuapp.com/search/${this.state.barcode}`)
+      )
+        .then(response => response.json())
+      	.then(json => this.setState({
+          title: json.title,
+        	barcode: this.state.barcode,
+        	image_url: json.cover_image
+        }));
   }
 
   cancel(e) {
     e.preventDefault();
-    this.setState({title: ''});
+    this.setState({
+      title: '',
+      barcode: ''
+    });
   }
 
   render() {
@@ -51,7 +58,7 @@ class Search extends React.Component {
         <div>
           <form>
             <div className="ml-3 form-group row">
-              <input className="form-control col-3" type="text" value={this.state.barcode} onChange={this.handleBarcodeValue} ref={this.searchInput} placeholder="Scan or enter barcode"/>
+              <input className="form-control col-3" type="text" value={this.state.barcode} onChange={this.handleBarcodeValue} ref={this.searchInput} placeholder="Scan or enter barcode" autoFocus/>
               <button className="btn btn-primary" onClick={this.handleClick}>
                 <svg className="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path fillRule="evenodd" d="M10.442 10.442a1 1 0 011.415 0l3.85 3.85a1 1 0 01-1.414 1.415l-3.85-3.85a1 1 0 010-1.415z" clipRule="evenodd"/>
@@ -93,7 +100,7 @@ class Search extends React.Component {
               </div>
             </div>
             <div className="form-group row">
-              <button className="btn btn-primary mr-2">Save </button> <button className="btn btn-secondary">Cancel</button>
+              <button className="btn btn-primary mr-2">Save </button> <button className="btn btn-secondary" onClick={this.cancel}>Cancel</button>
             </div>
           </form>
         </div>

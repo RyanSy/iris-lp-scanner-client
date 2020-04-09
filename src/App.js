@@ -20,8 +20,11 @@ function App() {
           <h5>Please login to begin.</h5>
         </div>
       )}
-
-      {isAuthenticated && (<Search />)}
+      {isAuthenticated && (
+        <div>
+          <Search />
+        </div>
+      )}
     </div>
   );
 }
