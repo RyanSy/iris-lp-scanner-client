@@ -2,64 +2,63 @@
 
 import React from "react";
 import { trackPromise } from 'react-promise-tracker';
+import Item from './Item';
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      barcodeInput: '',
       barcode: '',
       title: '',
-      image_url: ''
+      image_url: '',
+      quantity: '',
+      price: '',
     };
     this.searchInput = React.createRef();
-
-    this.handleBarcodeValue = this.handleBarcodeValue.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleTitleValue = this.handleTitleValue.bind(this);
-    this.cancel = this.cancel.bind(this);
+    this.handleBarcodeInput = this.handleBarcodeInput.bind(this);
+    this.searchForItem = this.searchForItem.bind(this);
   }
 
   componentDidMount() {
     this.searchInput.current.focus();
   }
 
-  handleBarcodeValue(e) {
-    this.setState({barcode: e.target.value});
+  handleBarcodeInput(e) {
+    this.setState({ barcodeInput: e.target.value });
   }
 
-  handleTitleValue(e) {
-    this.setState({title: e.target.value});
-  }
-
-  handleClick(e) {
+  searchForItem(e) {
     e.preventDefault();
-    trackPromise (
-      fetch(`https://iris-lp-scanner-server.herokuapp.com/search/${this.state.barcode}`)
-      )
-        .then(response => response.json())
-      	.then(json => this.setState({
+    this.searchInput.current.blur();
+    this.setState({ barcode: this.state.barcodeInput });
+    trackPromise(
+      // change url below to heroku server
+      fetch(`http://localhost:8080/search/${this.state.barcodeInput}`)
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => {
+        console.log('Search.js - searchForItem()\n', json);
+        this.setState({
           title: json.title,
-        	barcode: this.state.barcode,
-        	image_url: json.cover_image
-        }));
-  }
-
-  cancel(e) {
-    e.preventDefault();
-    this.setState({
-      title: '',
-      barcode: ''
-    });
+      	  image_url: json.cover_image,
+          quantity: json.quantity,
+          price: json.price,
+          barcodeInput: '',
+        })
+      });
   }
 
   render() {
-    if (!this.state.title) {
+      console.log('Search.js - this.state:\n', this.state);
       return (
         <div>
           <form>
             <div className="ml-3 form-group row">
-              <input className="form-control col-3" type="text" value={this.state.barcode} onChange={this.handleBarcodeValue} ref={this.searchInput} placeholder="Scan or enter barcode" autoFocus/>
-              <button className="btn btn-primary" onClick={this.handleClick}>
+              <input className="form-control col-3" type="text" name="barcode" value={this.state.barcodeInput} onChange={this.handleBarcodeInput} ref={this.searchInput} placeholder="Scan or enter barcode" />
+              <button className="btn btn-primary ml-1" onClick={this.searchForItem}>
                 <svg className="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path fillRule="evenodd" d="M10.442 10.442a1 1 0 011.415 0l3.85 3.85a1 1 0 01-1.414 1.415l-3.85-3.85a1 1 0 010-1.415z" clipRule="evenodd"/>
                   <path fillRule="evenodd" d="M6.5 12a5.5 5.5 0 100-11 5.5 5.5 0 000 11zM13 6.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z" clipRule="evenodd"/>
@@ -67,45 +66,12 @@ class Search extends React.Component {
               </button>
             </div>
           </form>
+          {this.state.title
+          ? <Item title={this.state.title} image_url={this.state.image_url} barcode={this.state.barcode} quantity={this.state.quantity} price={this.state.price} />
+          : null
+          }
         </div>
       );
-    } else {
-      return (
-        <div className="mt-3 ml-3">
-          <form className="ml-3 mt-3">
-            <div className="form-group row">
-              <img src={this.state.image_url} alt={this.state.title} height="300" width="300"></img>
-            </div>
-            <div className="form-group row">
-              <label className="col-form-label">
-                Title:
-              </label>
-              <input className="ml-2 form-control col-lg-3" type="text" name="title" value={this.state.title} onChange={this.handleTitleValue} />
-            </div>
-            <div className="form-group row">
-              <label className="col-form-label">
-                Barcode:
-              </label>
-              <input className="ml-2 form-control col-lg-3" type="text" name="barcode" value={this.state.barcode} disabled />
-            </div>
-            <div className="form-group row">
-              <div className="input-group">
-                <label className="col-form-label">
-                  Price:
-                </label>
-                <div className="ml-2 input-group-prepend">
-                  <div className="input-group-text">$</div>
-                </div>
-                <input className="form-control col-lg-1" type="number" name="price" min="0" autoFocus />
-              </div>
-            </div>
-            <div className="form-group row">
-              <button className="btn btn-primary mr-2">Save </button> <button className="btn btn-secondary" onClick={this.cancel}>Cancel</button>
-            </div>
-          </form>
-        </div>
-      );
-    }
   } // end render()
 } // end class
 

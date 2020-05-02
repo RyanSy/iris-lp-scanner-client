@@ -4,7 +4,7 @@ import React from "react";
 import { useAuth0 } from "../react-auth0-spa";
 
 const NavBar = () => {
-  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
 
   return (
     <div>
@@ -17,7 +17,7 @@ const NavBar = () => {
             <ul className="navbar-nav nav-items ml-auto mr-3">
               <li className="nav-item">
                 {!isAuthenticated && (<button onClick={() => loginWithRedirect({})}>Log in</button>)}
-                {isAuthenticated &&  (<button onClick={() => logout()}>Log out</button>)}
+                {isAuthenticated &&  (<span>{user.email}<button className="ml-3" onClick={() => logout()}>Log out</button></span>)}
               </li>
             </ul>
           </div>

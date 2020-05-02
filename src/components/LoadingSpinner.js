@@ -6,7 +6,7 @@ export const LoadingSpinner = (props) => {
 	const { promiseInProgress } = usePromiseTracker();
 
 	return (
-		<div class="ml-3">
+		<div className="ml-3">
 			{
 				(promiseInProgress === true) ?
 				<video autoPlay loop muted>
