@@ -11,12 +11,14 @@ class Item extends React.Component {
       image_url: this.props.image_url,
       quantity: this.props.quantity,
       price: this.props.price,
-      saved: false
+      item_id: this.props.item_id,
+      item_variation_id: this.props.item_variation_id,
+      item_state: this.props.item_state
     };
     this.handleTitleValue = this.handleTitleValue.bind(this);
     this.handlePriceValue = this.handlePriceValue.bind(this);
     this.handleQuantityValue = this.handleQuantityValue.bind(this);
-    this.saveToSquare = this.saveToSquare.bind(this);
+    this.save = this.save.bind(this);
     this.cancel = this.cancel.bind(this);
   }
 
@@ -32,11 +34,11 @@ class Item extends React.Component {
     this.setState({ price: e.target.value });
   }
 
-  saveToSquare(e) {
+  save(e) {
     e.preventDefault();
     const data = this.state;
     // change url below to heroku server
-    fetch('http://localhost:8080/add-item', {
+    fetch('http://localhost:8080/save-item', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -84,7 +86,7 @@ class Item extends React.Component {
       )
     }
 
-    if (this.props.title) {
+    if (this.state.title) {
       return (
         <div className="mt-3 ml-3">
           <form className="ml-3 mt-3">
@@ -106,7 +108,15 @@ class Item extends React.Component {
             <div className="form-group row">
               <div className="input-group">
                 <label className="col-form-label">
-                  Quantity:
+                  Current Quantity:
+                </label>
+                <input className="form-control col-2 ml-2" type="number" value={this.props.current_quantity} disabled />
+              </div>
+            </div>
+            <div className="form-group row">
+              <div className="input-group">
+                <label className="col-form-label">
+                  Quantity Received:
                 </label>
                 <input className="form-control col-2 ml-2" type="number" name="quantity" min="0" value={this.state.quantity} onChange={this.handleQuantityValue} autoFocus />
               </div>
@@ -123,8 +133,11 @@ class Item extends React.Component {
               </div>
             </div>
             <input type="hidden" name="image_url" value={this.state.image_url} />
+            <input type="hidden" name="item_id" value={this.state.item_id} />
+            <input type="hidden" name="image_variation_id" value={this.state.item_variation_id} />
+            <input type="hidden" name="item_state" value={this.state.item_state} />
             <div className="form-group row">
-              <button className="btn btn-primary mr-2" onClick={this.saveToSquare}>Save </button> <button className="btn btn-secondary" onClick={this.cancel}>Cancel</button>
+              <button className="btn btn-primary mr-2" onClick={this.save}>Save </button> <button className="btn btn-secondary" onClick={this.cancel}>Cancel</button>
             </div>
           </form>
         </div>

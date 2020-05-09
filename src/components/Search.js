@@ -12,8 +12,12 @@ class Search extends React.Component {
       barcode: '',
       title: '',
       image_url: '',
-      quantity: '',
+      quantity: 0,
       price: '',
+      saved: false,
+      item_id: '',
+      item_variation_id: '',
+      state: ''
     };
     this.searchInput = React.createRef();
     this.handleBarcodeInput = this.handleBarcodeInput.bind(this);
@@ -31,7 +35,13 @@ class Search extends React.Component {
   searchForItem(e) {
     e.preventDefault();
     this.searchInput.current.blur();
-    this.setState({ barcode: this.state.barcodeInput });
+
+    // is this necessary?
+    this.setState({
+      barcode: this.state.barcodeInput,
+      saved: false
+     });
+
     trackPromise(
       // change url below to heroku server
       fetch(`http://localhost:8080/search/${this.state.barcodeInput}`)
@@ -47,6 +57,9 @@ class Search extends React.Component {
           quantity: json.quantity,
           price: json.price,
           barcodeInput: '',
+          item_id: json.item_id,
+          item_variation_id: json.item_variation_id,
+          state: json.state
         })
       });
   }
@@ -67,7 +80,7 @@ class Search extends React.Component {
             </div>
           </form>
           {this.state.title
-          ? <Item title={this.state.title} image_url={this.state.image_url} barcode={this.state.barcode} quantity={this.state.quantity} price={this.state.price} />
+          ? <Item title={this.state.title} image_url={this.state.image_url} barcode={this.state.barcode} current_quantity={this.state.quantity} price={this.state.price} saved={this.state.saved} item_id={this.state.item_id} item_variation_id={this.state.item_variation_id} item_state={this.state.item_state}/>
           : null
           }
         </div>
