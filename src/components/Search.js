@@ -17,7 +17,8 @@ class Search extends React.Component {
       saved: false,
       item_id: '',
       item_variation_id: '',
-      state: ''
+      item_variation_version: '',
+      item_state: ''
     };
     this.searchInput = React.createRef();
     this.handleBarcodeInput = this.handleBarcodeInput.bind(this);
@@ -59,7 +60,8 @@ class Search extends React.Component {
           barcodeInput: '',
           item_id: json.item_id,
           item_variation_id: json.item_variation_id,
-          state: json.state
+          item_variation_version: json.item_variation_version,
+          item_state: json.item_state
         })
       });
   }
@@ -80,7 +82,7 @@ class Search extends React.Component {
             </div>
           </form>
           {this.state.title
-          ? <Item title={this.state.title} image_url={this.state.image_url} barcode={this.state.barcode} current_quantity={this.state.quantity} price={this.state.price} saved={this.state.saved} item_id={this.state.item_id} item_variation_id={this.state.item_variation_id} item_state={this.state.item_state}/>
+          ? <Item title={this.state.title} image_url={this.state.image_url} barcode={this.state.barcode} current_quantity={this.state.quantity} price={this.state.price} saved={this.state.saved} item_id={this.state.item_id} item_variation_id={this.state.item_variation_id} item_version={this.state.item_variation_version} item_state={this.state.item_state}/>
           : null
           }
         </div>

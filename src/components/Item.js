@@ -13,12 +13,14 @@ class Item extends React.Component {
       price: this.props.price,
       item_id: this.props.item_id,
       item_variation_id: this.props.item_variation_id,
+      item_variation_version: this.props.item_variation_version,
       item_state: this.props.item_state
     };
     this.handleTitleValue = this.handleTitleValue.bind(this);
     this.handlePriceValue = this.handlePriceValue.bind(this);
     this.handleQuantityValue = this.handleQuantityValue.bind(this);
-    this.save = this.save.bind(this);
+    this.create = this.create.bind(this);
+    this.update = this.update.bind(this);
     this.cancel = this.cancel.bind(this);
   }
 
@@ -34,11 +36,11 @@ class Item extends React.Component {
     this.setState({ price: e.target.value });
   }
 
-  save(e) {
+  create(e) {
     e.preventDefault();
     const data = this.state;
     // change url below to heroku server
-    fetch('http://localhost:8080/save-item', {
+    fetch('http://localhost:8080/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,7 +54,32 @@ class Item extends React.Component {
         return response ? JSON.parse(response) : {};
       })
       .catch(error => {
-        console.error('Error saving to square:\n', error)
+        console.error('Error creating item:\n', error)
+      });
+    this.setState({
+      saved: true
+    });
+  }
+
+  update(e) {
+    e.preventDefault();
+    const data = this.state;
+    // change url below to heroku server
+    fetch('http://localhost:8080/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => {
+        return response.text();
+      })
+      .then((response) =>  {
+        return response ? JSON.parse(response) : {};
+      })
+      .catch(error => {
+        console.error('Error updating item:\n', error)
       });
     this.setState({
       saved: true
@@ -134,10 +161,15 @@ class Item extends React.Component {
             </div>
             <input type="hidden" name="image_url" value={this.state.image_url} />
             <input type="hidden" name="item_id" value={this.state.item_id} />
-            <input type="hidden" name="image_variation_id" value={this.state.item_variation_id} />
+            <input type="hidden" name="item_variation_id" value={this.state.item_variation_id} />
+            <input type="hidden" name="item_variation_version" value={this.state.item_variation_version} />
             <input type="hidden" name="item_state" value={this.state.item_state} />
             <div className="form-group row">
-              <button className="btn btn-primary mr-2" onClick={this.save}>Save </button> <button className="btn btn-secondary" onClick={this.cancel}>Cancel</button>
+              {this.state.version ?
+              <button className="btn btn-primary mr-2" onClick={this.create}>Create </button> :
+              <button className="btn btn-primary mr-2" onClick={this.update}>Update </button> 
+              }
+               <button className="btn btn-secondary" onClick={this.cancel}>Cancel</button>
             </div>
           </form>
         </div>
