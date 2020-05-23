@@ -14,11 +14,13 @@ class Item extends React.Component {
       item_id: this.props.item_id,
       item_variation_id: this.props.item_variation_id,
       item_variation_version: this.props.item_variation_version,
-      item_state: this.props.item_state
+      item_state: this.props.item_state,
+      total_quantity: null
     };
     this.handleTitleValue = this.handleTitleValue.bind(this);
     this.handlePriceValue = this.handlePriceValue.bind(this);
     this.handleQuantityValue = this.handleQuantityValue.bind(this);
+    this.handleTotalQuantityValue = this.handleTotalQuantityValue.bind(this);
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
     this.cancel = this.cancel.bind(this);
@@ -29,7 +31,12 @@ class Item extends React.Component {
   }
 
   handleQuantityValue(e) {
-    this.setState({ quantity: e.target.value })
+    this.setState({ quantity: e.target.value });
+  }
+
+  handleTotalQuantityValue(e) {
+    var total_quantity = parseInt(e.target.value) + parseInt(this.state.quantity);
+    this.setState({ total_quantity: total_quantity.toString() });
   }
 
   handlePriceValue(e) {
@@ -96,7 +103,7 @@ class Item extends React.Component {
   }
 
   render() {
-    console.log('Item.js rendered - this.state.title:\n', this.state.title);
+    console.log('Item.js rendered - this.state:\n', this.state);
     if (this.props.title === 'Item not found') {
       return (
         <div className="text-center mt-5">
@@ -137,7 +144,7 @@ class Item extends React.Component {
                 <label className="col-form-label">
                   Current Quantity:
                 </label>
-                <input className="form-control col-2 ml-2" type="number" value={this.props.current_quantity} disabled />
+                <input className="form-control col-2 ml-2" type="number" value={this.props.quantity} disabled />
               </div>
             </div>
             <div className="form-group row">
@@ -145,7 +152,15 @@ class Item extends React.Component {
                 <label className="col-form-label">
                   Quantity Received:
                 </label>
-                <input className="form-control col-2 ml-2" type="number" name="quantity" min="0" value={this.state.quantity} onChange={this.handleQuantityValue} autoFocus />
+                <input className="form-control col-2 ml-2" type="number" name="quantity" min="0" onChange={this.handleTotalQuantityValue} autoFocus />
+              </div>
+            </div>
+            <div className="form-group row">
+              <div className="input-group">
+                <label className="col-form-label">
+                  New Quantity:
+                </label>
+                <input className="form-control col-2 ml-2" type="number" name="total_quantity" min="0" value={this.state.total_quantity} disabled />
               </div>
             </div>
             <div className="form-group row">
@@ -167,7 +182,7 @@ class Item extends React.Component {
             <div className="form-group row">
               {this.state.version ?
               <button className="btn btn-primary mr-2" onClick={this.create}>Create </button> :
-              <button className="btn btn-primary mr-2" onClick={this.update}>Update </button> 
+              <button className="btn btn-primary mr-2" onClick={this.update}>Update </button>
               }
                <button className="btn btn-secondary" onClick={this.cancel}>Cancel</button>
             </div>
