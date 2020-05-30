@@ -15,7 +15,7 @@ class Item extends React.Component {
       item_variation_id: this.props.item_variation_id,
       item_variation_version: this.props.item_variation_version,
       item_state: this.props.item_state,
-      total_quantity: null
+      total_quantity: 0
     };
     this.handleTitleValue = this.handleTitleValue.bind(this);
     this.handlePriceValue = this.handlePriceValue.bind(this);
@@ -36,7 +36,9 @@ class Item extends React.Component {
 
   handleTotalQuantityValue(e) {
     var total_quantity = parseInt(e.target.value) + parseInt(this.state.quantity);
-    this.setState({ total_quantity: total_quantity.toString() });
+    this.setState({
+      quantity: e.target.value,
+      total_quantity: total_quantity });
   }
 
   handlePriceValue(e) {
@@ -152,7 +154,7 @@ class Item extends React.Component {
                 <label className="col-form-label">
                   Quantity Received:
                 </label>
-                <input className="form-control col-2 ml-2" type="number" name="quantity" min="0" onChange={this.handleTotalQuantityValue} autoFocus />
+                <input className="form-control col-2 ml-2" type="number" name="quantity" min="0" value={this.state.quantity} onChange={this.handleTotalQuantityValue} autoFocus />
               </div>
             </div>
             <div className="form-group row">
@@ -180,9 +182,9 @@ class Item extends React.Component {
             <input type="hidden" name="item_variation_version" value={this.state.item_variation_version} />
             <input type="hidden" name="item_state" value={this.state.item_state} />
             <div className="form-group row">
-              {this.state.version ?
-              <button className="btn btn-primary mr-2" onClick={this.create}>Create </button> :
-              <button className="btn btn-primary mr-2" onClick={this.update}>Update </button>
+              {this.state.item_variation_version ?
+              <button className="btn btn-primary mr-2" onClick={this.update}>Update </button> :
+              <button className="btn btn-primary mr-2" onClick={this.create}>Create </button>
               }
                <button className="btn btn-secondary" onClick={this.cancel}>Cancel</button>
             </div>
