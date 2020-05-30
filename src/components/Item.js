@@ -15,7 +15,9 @@ class Item extends React.Component {
       item_variation_id: this.props.item_variation_id,
       item_variation_version: this.props.item_variation_version,
       item_state: this.props.item_state,
-      total_quantity: 0
+      quantity_received: 0,
+      total_quantity: 0,
+      saved: false
     };
     this.handleTitleValue = this.handleTitleValue.bind(this);
     this.handlePriceValue = this.handlePriceValue.bind(this);
@@ -24,6 +26,12 @@ class Item extends React.Component {
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
     this.cancel = this.cancel.bind(this);
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount called');
+    this.setState({ saved: this.props.saved });
+    console.log(this.props.saved);
   }
 
   handleTitleValue(e) {
@@ -37,7 +45,7 @@ class Item extends React.Component {
   handleTotalQuantityValue(e) {
     var total_quantity = parseInt(e.target.value) + parseInt(this.state.quantity);
     this.setState({
-      quantity: e.target.value,
+      quantity_received: e.target.value,
       total_quantity: total_quantity });
   }
 
@@ -105,7 +113,7 @@ class Item extends React.Component {
   }
 
   render() {
-    console.log('Item.js rendered - this.state:\n', this.state);
+    console.log('Item.js rendered - this.props:\n', this.props);
     if (this.props.title === 'Item not found') {
       return (
         <div className="text-center mt-5">
@@ -114,7 +122,7 @@ class Item extends React.Component {
       )
     }
 
-    if (this.state.saved) {
+    if (this.state.saved === true) {
       return (
         <div className="text-center mt-5">
           <h3>{this.state.title} saved to Square.</h3>
@@ -127,19 +135,19 @@ class Item extends React.Component {
         <div className="mt-3 ml-3">
           <form className="ml-3 mt-3">
             <div className="form-group row">
-              <img src={this.state.image_url} alt={this.state.title} height="300" width="300"></img>
+              <img src={this.props.image_url} alt={this.props.title} height="300" width="300"></img>
             </div>
             <div className="form-group row">
               <label className="col-form-label">
                 Title:
               </label>
-              <input className="ml-2 form-control col-6" type="text" name="title" value={this.state.title} onChange={this.handleTitleValue} />
+              <input className="ml-2 form-control col-6" type="text" name="title" value={this.props.title} onChange={this.handleTitleValue} />
             </div>
             <div className="form-group row">
               <label className="col-form-label">
                 Barcode:
               </label>
-              <input className="ml-2 form-control col-2" type="text" name="barcode" value={this.state.barcode} disabled />
+              <input className="ml-2 form-control col-2" type="text" name="barcode" value={this.props.barcode} disabled />
             </div>
             <div className="form-group row">
               <div className="input-group">
@@ -154,7 +162,7 @@ class Item extends React.Component {
                 <label className="col-form-label">
                   Quantity Received:
                 </label>
-                <input className="form-control col-2 ml-2" type="number" name="quantity" min="0" value={this.state.quantity} onChange={this.handleTotalQuantityValue} autoFocus />
+                <input className="form-control col-2 ml-2" type="number" name="quantity_received" min="0" value={this.state.quantity_received} onChange={this.handleTotalQuantityValue} autoFocus />
               </div>
             </div>
             <div className="form-group row">

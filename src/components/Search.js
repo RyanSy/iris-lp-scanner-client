@@ -14,11 +14,11 @@ class Search extends React.Component {
       image_url: '',
       quantity: 0,
       price: '',
-      saved: false,
       item_id: '',
       item_variation_id: '',
       item_variation_version: '',
-      item_state: ''
+      item_state: '',
+      saved: false
     };
     this.searchInput = React.createRef();
     this.handleBarcodeInput = this.handleBarcodeInput.bind(this);
@@ -30,19 +30,15 @@ class Search extends React.Component {
   }
 
   handleBarcodeInput(e) {
-    this.setState({ barcodeInput: e.target.value });
+    this.setState({
+      barcodeInput: e.target.value,
+      barcode: e.target.value
+    });
   }
 
   searchForItem(e) {
     e.preventDefault();
     this.searchInput.current.blur();
-
-    // is this necessary?
-    this.setState({
-      barcode: this.state.barcodeInput,
-      saved: false
-     });
-
     trackPromise(
       // change url below to heroku server
       fetch(`http://localhost:8080/search/${this.state.barcodeInput}`)
@@ -52,17 +48,23 @@ class Search extends React.Component {
       })
       .then((json) => {
         console.log('Search.js - searchForItem()\n', json);
+        if (json.quantity) {
+          var quantity = json.quantity;
+        } else {
+          quantity = this.state.quantity;
+        }
         this.setState({
           title: json.title,
       	  image_url: json.cover_image,
-          quantity: json.quantity,
+          quantity: quantity,
           price: json.price,
           barcodeInput: '',
           item_id: json.item_id,
           item_variation_id: json.item_variation_id,
           item_variation_version: json.item_variation_version,
-          item_state: json.item_state
-        })
+          item_state: json.item_state,
+          saved: false
+        });
       });
   }
 
@@ -82,7 +84,7 @@ class Search extends React.Component {
             </div>
           </form>
           {this.state.title
-          ? <Item title={this.state.title} image_url={this.state.image_url} barcode={this.state.barcode} quantity={this.state.quantity} price={this.state.price} saved={this.state.saved} item_id={this.state.item_id} item_variation_id={this.state.item_variation_id} item_variation_version={this.state.item_variation_version} item_state={this.state.item_state}/>
+          ? <Item title={this.state.title} image_url={this.state.image_url} barcode={this.state.barcode} quantity={this.state.quantity} price={this.state.price} item_id={this.state.item_id} item_variation_id={this.state.item_variation_id} item_variation_version={this.state.item_variation_version} item_state={this.state.item_state} saved={this.state.saved}/>
           : null
           }
         </div>
