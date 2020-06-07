@@ -6,133 +6,20 @@ class Item extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      barcode: this.props.barcode,
       title: this.props.title,
-      image_url: this.props.image_url,
       quantity: this.props.quantity,
       price: this.props.price,
-      item_id: this.props.item_id,
-      item_variation_id: this.props.item_variation_id,
-      item_variation_version: this.props.item_variation_version,
-      item_state: this.props.item_state,
       quantity_received: 0,
-      total_quantity: 0,
-      saved: false
+      total_quantity: this.props.quantity,
     };
-    this.handleTitleValue = this.handleTitleValue.bind(this);
-    this.handlePriceValue = this.handlePriceValue.bind(this);
-    this.handleQuantityValue = this.handleQuantityValue.bind(this);
-    this.handleTotalQuantityValue = this.handleTotalQuantityValue.bind(this);
-    this.create = this.create.bind(this);
-    this.update = this.update.bind(this);
-    this.cancel = this.cancel.bind(this);
-  }
-
-  componentDidMount() {
-    console.log('componentDidMount called');
-    this.setState({ saved: this.props.saved });
-    console.log(this.props.saved);
-  }
-
-  handleTitleValue(e) {
-    this.setState({ title: e.target.value });
-  }
-
-  handleQuantityValue(e) {
-    this.setState({ quantity: e.target.value });
-  }
-
-  handleTotalQuantityValue(e) {
-    var total_quantity = parseInt(e.target.value) + parseInt(this.state.quantity);
-    this.setState({
-      quantity_received: e.target.value,
-      total_quantity: total_quantity });
-  }
-
-  handlePriceValue(e) {
-    this.setState({ price: e.target.value });
-  }
-
-  create(e) {
-    e.preventDefault();
-    const data = this.state;
-    // change url below to heroku server
-    fetch('http://localhost:8080/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then(response => {
-        return response.text();
-      })
-      .then((response) =>  {
-        return response ? JSON.parse(response) : {};
-      })
-      .catch(error => {
-        console.error('Error creating item:\n', error)
-      });
-    this.setState({
-      saved: true
-    });
-  }
-
-  update(e) {
-    e.preventDefault();
-    const data = this.state;
-    // change url below to heroku server
-    fetch('http://localhost:8080/update', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then(response => {
-        return response.text();
-      })
-      .then((response) =>  {
-        return response ? JSON.parse(response) : {};
-      })
-      .catch(error => {
-        console.error('Error updating item:\n', error)
-      });
-    this.setState({
-      saved: true
-    });
-  }
-
-  cancel(e) {
-    e.preventDefault();
-    this.setState({
-      title: '',
-      barcode: '',
-      saved: false
-    });
   }
 
   render() {
-    console.log('Item.js rendered - this.props:\n', this.props);
-    if (this.props.title === 'Item not found') {
-      return (
-        <div className="text-center mt-5">
-          <h3>{this.props.barcode} not found</h3>
-        </div>
-      )
-    }
+    console.log('Item component rendered\n this.state:\n', this.state, '\nthis.props:\n', this.props);
 
-    if (this.state.saved === true) {
+    if (this.props.saved === false) {
       return (
-        <div className="text-center mt-5">
-          <h3>{this.state.title} saved to Square.</h3>
-        </div>
-      )
-    }
-
-    if (this.state.title) {
-      return (
-        <div className="mt-3 ml-3">
+        <div className="ml-3 mt-3">
           <form className="ml-3 mt-3">
             <div className="form-group row">
               <img src={this.props.image_url} alt={this.props.title} height="300" width="300"></img>
@@ -141,7 +28,7 @@ class Item extends React.Component {
               <label className="col-form-label">
                 Title:
               </label>
-              <input className="ml-2 form-control col-6" type="text" name="title" value={this.props.title} onChange={this.handleTitleValue} />
+              <input className="ml-2 form-control col-6" type="text" name="title" value={this.props.title} onChange={this.props.handleTitleValue} />
             </div>
             <div className="form-group row">
               <label className="col-form-label">
@@ -162,7 +49,7 @@ class Item extends React.Component {
                 <label className="col-form-label">
                   Quantity Received:
                 </label>
-                <input className="form-control col-2 ml-2" type="number" name="quantity_received" min="0" value={this.state.quantity_received} onChange={this.handleTotalQuantityValue} autoFocus />
+                <input className="form-control col-2 ml-2" type="number" name="quantity_received" min="0" value={this.props.quantity_received} onChange={this.props.handleTotalQuantityValue} autoFocus />
               </div>
             </div>
             <div className="form-group row">
@@ -170,7 +57,7 @@ class Item extends React.Component {
                 <label className="col-form-label">
                   New Quantity:
                 </label>
-                <input className="form-control col-2 ml-2" type="number" name="total_quantity" min="0" value={this.state.total_quantity} disabled />
+                <input className="form-control col-2 ml-2" type="number" name="total_quantity" min="0" value={this.props.total_quantity} disabled />
               </div>
             </div>
             <div className="form-group row">
@@ -181,33 +68,37 @@ class Item extends React.Component {
                 <div className="ml-2 input-group-prepend">
                   <div className="input-group-text">$</div>
                 </div>
-                <input className="form-control col-2" type="number" name="price" min="0" value={this.state.price} onChange={this.handlePriceValue} />
+                <input className="form-control col-2" type="number" name="price" min="0" value={this.props.price} onChange={this.props.handlePriceValue} />
               </div>
             </div>
-            <input type="hidden" name="image_url" value={this.state.image_url} />
-            <input type="hidden" name="item_id" value={this.state.item_id} />
-            <input type="hidden" name="item_variation_id" value={this.state.item_variation_id} />
-            <input type="hidden" name="item_variation_version" value={this.state.item_variation_version} />
-            <input type="hidden" name="item_state" value={this.state.item_state} />
             <div className="form-group row">
-              {this.state.item_variation_version ?
-              <button className="btn btn-primary mr-2" onClick={this.update}>Update </button> :
-              <button className="btn btn-primary mr-2" onClick={this.create}>Create </button>
-              }
-               <button className="btn btn-secondary" onClick={this.cancel}>Cancel</button>
+                {this.props.title ?
+                <button className="btn btn-primary mr-2" onClick={this.props.update}>Update </button> :
+                <button className="btn btn-primary mr-2" onClick={this.props.create}>Create </button>
+                }
+                <button className="btn btn-secondary" onClick={this.props.cancel}>Cancel</button>
             </div>
           </form>
         </div>
       );
     }
 
-    // new method needed to update item
-
-    if (this.state.title === '') {
+    if (this.props.saved === true) {
       return (
-        <div></div>
+        <div className="text-center mt-5">
+          <h3>{this.state.title} Item saved to Square.</h3>
+        </div>
       )
     }
+
+    if (this.props.title === 'Item not found') {
+      return (
+        <div className="text-center mt-5">
+          <h3>{this.props.barcode} not found</h3>
+        </div>
+      )
+    }
+
   } // end render()
 } // end class
 

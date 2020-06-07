@@ -14,6 +14,8 @@ class Search extends React.Component {
       image_url: '',
       quantity: 0,
       price: '',
+      quantity_received: '',
+      total_quantity: '',
       item_id: '',
       item_variation_id: '',
       item_variation_version: '',
@@ -23,6 +25,12 @@ class Search extends React.Component {
     this.searchInput = React.createRef();
     this.handleBarcodeInput = this.handleBarcodeInput.bind(this);
     this.searchForItem = this.searchForItem.bind(this);
+    this.handleTitleValue = this.handleTitleValue.bind(this);
+    this.handlePriceValue = this.handlePriceValue.bind(this);
+    this.handleTotalQuantityValue = this.handleTotalQuantityValue.bind(this);
+    this.create = this.create.bind(this);
+    this.update = this.update.bind(this);
+    this.cancel = this.cancel.bind(this);
   }
 
   componentDidMount() {
@@ -38,7 +46,7 @@ class Search extends React.Component {
 
   searchForItem(e) {
     e.preventDefault();
-    this.searchInput.current.blur();
+    // this.searchInput.current.blur();
     trackPromise(
       // change url below to heroku server
       fetch(`http://localhost:8080/search/${this.state.barcodeInput}`)
@@ -68,8 +76,121 @@ class Search extends React.Component {
       });
   }
 
+  handleTitleValue(e) {
+    e.preventDefault();
+    this.setState({ title: e.target.value });
+  }
+
+  handlePriceValue(e) {
+    e.preventDefault();
+    this.setState({ price: e.target.value});
+  }
+
+  handleTotalQuantityValue(e) {
+    e.preventDefault();
+    var total_quantity = parseInt(e.target.value) + parseInt(this.state.quantity);
+    this.setState({
+      quantity_received: e.target.value,
+      total_quantity: total_quantity });
+  }
+
+  create(e) {
+    e.preventDefault();
+    this.searchInput.current.focus();
+    const data = this.state;
+    // change url below to heroku server
+    fetch('http://localhost:8080/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => {
+        return response.text();
+      })
+      .then((response) =>  {
+        return response ? JSON.parse(response) : {};
+      })
+      .catch(error => {
+        console.error('Error creating item:\n', error)
+      });
+      this.setState({
+        barcodeInput: '',
+        barcode: '',
+        title: '',
+        image_url: '',
+        quantity: 0,
+        price: '',
+        quantity_received: '',
+        total_quantity: '',
+        item_id: '',
+        item_variation_id: '',
+        item_variation_version: '',
+        item_state: '',
+        saved: true
+      });
+  }
+
+  update(e) {
+    e.preventDefault();
+    this.searchInput.current.focus();
+    const data = this.state;
+    // change url below to heroku server
+    fetch('http://localhost:8080/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => {
+        return response.text();
+      })
+      .then((response) =>  {
+        return response ? JSON.parse(response) : {};
+      })
+      .catch(error => {
+        console.error('Error updating item:\n', error)
+      });
+      this.setState({
+        barcodeInput: '',
+        barcode: '',
+        title: '',
+        image_url: '',
+        quantity: 0,
+        price: '',
+        quantity_received: '',
+        total_quantity: '',
+        item_id: '',
+        item_variation_id: '',
+        item_variation_version: '',
+        item_state: '',
+        saved: true
+      });
+  }
+
+  cancel(e) {
+    e.preventDefault();
+    this.setState({
+      barcodeInput: '',
+      barcode: '',
+      title: '',
+      image_url: '',
+      quantity: 0,
+      price: '',
+      quantity_received: '',
+      total_quantity: '',
+      item_id: '',
+      item_variation_id: '',
+      item_variation_version: '',
+      item_state: '',
+      saved: false
+    });
+  }
+
   render() {
-      console.log('Search.js - this.state:\n', this.state);
+      console.log('Search component rendered\n this.state:\n', this.state);
       return (
         <div>
           <form>
@@ -83,10 +204,20 @@ class Search extends React.Component {
               </button>
             </div>
           </form>
-          {this.state.title
-          ? <Item title={this.state.title} image_url={this.state.image_url} barcode={this.state.barcode} quantity={this.state.quantity} price={this.state.price} item_id={this.state.item_id} item_variation_id={this.state.item_variation_id} item_variation_version={this.state.item_variation_version} item_state={this.state.item_state} saved={this.state.saved}/>
-          : null
-          }
+
+          <Item
+            title={this.state.title}
+            image_url={this.state.image_url}
+            barcode={this.state.barcode}
+            quantity={this.state.quantity}
+            price={this.state.price}
+            handleTitleValue={this.handleTitleValue} handlePriceValue={this.handlePriceValue} handleTotalQuantityValue={this.handleTotalQuantityValue} quantity_received={this.state.quantity_received} total_quantity={this.state.total_quantity}
+            saved={this.state.saved}
+            create={this.create}
+            update={this.update}
+            cancel={this.cancel}
+          />
+
         </div>
       );
   } // end render()
