@@ -49,7 +49,7 @@ class Search extends React.Component {
     // this.searchInput.current.blur();
     trackPromise(
       // change url below to heroku server
-      fetch(`http://localhost:8080/search/${this.state.barcodeInput}`)
+      fetch(`https://iris-lp-scanner-server.herokuapp.com/search/${this.state.barcodeInput}`)
     )
       .then((response) => {
         return response.json();
@@ -99,7 +99,7 @@ class Search extends React.Component {
     this.searchInput.current.focus();
     const data = this.state;
     // change url below to heroku server
-    fetch('http://localhost:8080/create', {
+    fetch(`https://iris-lp-scanner-server.herokuapp.com/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ class Search extends React.Component {
     this.searchInput.current.focus();
     const data = this.state;
     // change url below to heroku server
-    fetch('http://localhost:8080/update', {
+    fetch(`https://iris-lp-scanner-server.herokuapp.com/update`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -190,6 +190,7 @@ class Search extends React.Component {
   }
 
   render() {
+      console.log('process.env:\n', process.env);
       console.log('Search component rendered\n this.state:\n', this.state);
       return (
         <div>
