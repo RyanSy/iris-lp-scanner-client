@@ -47,7 +47,6 @@ class Search extends React.Component {
     // this.searchInput.current.blur();
     this.setState({ saved: false})
     trackPromise(
-      // change url below to heroku server
       fetch(`https://iris-lp-scanner-server.herokuapp.com/search/${this.state.barcodeInput}`)
     )
       .then((response) => {
@@ -95,8 +94,7 @@ class Search extends React.Component {
     e.preventDefault();
     this.searchInput.current.focus();
     const data = this.state;
-    // change url below to heroku server
-    fetch(`${serverUrl}/create`, {
+    fetch('https://iris-lp-scanner-server.herokuapp.com/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -133,8 +131,7 @@ class Search extends React.Component {
     e.preventDefault();
     this.searchInput.current.focus();
     const data = this.state;
-    // change url below to heroku server
-    fetch(`${serverUrl}/update`, {
+    fetch('https://iris-lp-scanner-server.herokuapp.com/update', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
