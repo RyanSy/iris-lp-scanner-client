@@ -3,7 +3,8 @@
 import React from "react";
 import { trackPromise } from 'react-promise-tracker';
 import Item from './Item';
-const serverUrl = 'http://localhost:8080'
+// const serverUrl = 'http://localhost:8080';
+const serverUrl = 'https://iris-lp-scanner-server.herokuapp.com'
 
 class Search extends React.Component {
   constructor(props) {
