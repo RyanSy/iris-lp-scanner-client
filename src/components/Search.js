@@ -1,10 +1,6 @@
-// src/components/Search.js
-
 import React from "react";
 import { trackPromise } from 'react-promise-tracker';
 import Item from './Item';
-// const serverUrl = 'http://localhost:8080';
-const serverUrl = 'https://iris-lp-scanner-server.herokuapp.com'
 
 class Search extends React.Component {
   constructor(props) {
@@ -52,13 +48,12 @@ class Search extends React.Component {
     this.setState({ saved: false})
     trackPromise(
       // change url below to heroku server
-      fetch(`http://localhost:8080/search/${this.state.barcodeInput}`)
+      fetch(`https://iris-lp-scanner-server.herokuapp.com/search/${this.state.barcodeInput}`)
     )
       .then((response) => {
         return response.json();
       })
       .then((json) => {
-        console.log('Search.js - searchForItem()\n', json);
         if (json.quantity) {
           var quantity = json.quantity;
         } else {
@@ -115,7 +110,7 @@ class Search extends React.Component {
         return response ? JSON.parse(response) : {};
       })
       .catch(error => {
-        console.error('Error creating item:\n', error)
+        console.error('Error creating item')
       });
       this.setState({
         barcodeInput: '',
@@ -153,7 +148,7 @@ class Search extends React.Component {
         return response ? JSON.parse(response) : {};
       })
       .catch(error => {
-        console.error('Error updating item:\n', error)
+        console.error('Error updating item')
       });
       this.setState({
         barcodeInput: '',
@@ -192,8 +187,6 @@ class Search extends React.Component {
   }
 
   render() {
-      console.log('process.env:\n', process.env);
-      console.log('Search component rendered\n this.state:\n', this.state);
       return (
         <div>
           <form>

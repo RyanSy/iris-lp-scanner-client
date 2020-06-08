@@ -1,5 +1,3 @@
-// src/components/Search.js
-
 import React from "react";
 
 class Item extends React.Component {
