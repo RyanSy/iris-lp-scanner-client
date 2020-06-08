@@ -3,6 +3,7 @@
 import React from "react";
 import { trackPromise } from 'react-promise-tracker';
 import Item from './Item';
+const serverUrl = 'http://localhost:8080'
 
 class Search extends React.Component {
   constructor(props) {
@@ -47,9 +48,10 @@ class Search extends React.Component {
   searchForItem(e) {
     e.preventDefault();
     // this.searchInput.current.blur();
+    this.setState({ saved: false})
     trackPromise(
       // change url below to heroku server
-      fetch(`https://iris-lp-scanner-server.herokuapp.com/search/${this.state.barcodeInput}`)
+      fetch(`http://localhost:8080/search/${this.state.barcodeInput}`)
     )
       .then((response) => {
         return response.json();
@@ -71,7 +73,6 @@ class Search extends React.Component {
           item_variation_id: json.item_variation_id,
           item_variation_version: json.item_variation_version,
           item_state: json.item_state,
-          saved: false
         });
       });
   }
@@ -99,7 +100,7 @@ class Search extends React.Component {
     this.searchInput.current.focus();
     const data = this.state;
     // change url below to heroku server
-    fetch(`https://iris-lp-scanner-server.herokuapp.com/create`, {
+    fetch(`${serverUrl}/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -137,7 +138,7 @@ class Search extends React.Component {
     this.searchInput.current.focus();
     const data = this.state;
     // change url below to heroku server
-    fetch(`https://iris-lp-scanner-server.herokuapp.com/update`, {
+    fetch(`${serverUrl}/update`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
