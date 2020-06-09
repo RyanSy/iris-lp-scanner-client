@@ -69,6 +69,10 @@ class Search extends React.Component {
           item_variation_version: json.item_variation_version,
           item_state: json.item_state,
         });
+      })
+      .catch(error => {
+        console.log('error searching for item\n');
+        console.log(error);
       });
   }
 
@@ -145,7 +149,8 @@ class Search extends React.Component {
         return response ? JSON.parse(response) : {};
       })
       .catch(error => {
-        console.error('Error updating item')
+        console.log('error updating item\n');
+        console.log(error);
       });
       this.setState({
         barcodeInput: '',
