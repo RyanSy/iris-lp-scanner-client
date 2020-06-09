@@ -70,7 +70,7 @@ class Search extends React.Component {
           item_state: json.item_state,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('error searching for item\n');
         console.log(error);
       });
@@ -112,8 +112,9 @@ class Search extends React.Component {
       .then((response) =>  {
         return response ? JSON.parse(response) : {};
       })
-      .catch(error => {
-        console.error('Error creating item')
+      .catch((error) => {
+        console.log('error creating item');
+        console.log(error);
       });
       this.setState({
         barcodeInput: '',
@@ -144,13 +145,13 @@ class Search extends React.Component {
       body: JSON.stringify(data),
       mode: 'cors'
     })
-      .then(response => {
+      .then((response) => {
         return response.text();
       })
       .then((response) =>  {
         return response ? JSON.parse(response) : {};
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('error updating item\n');
         console.log(error);
       });
