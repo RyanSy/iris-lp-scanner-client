@@ -47,7 +47,7 @@ class Search extends React.Component {
     // this.searchInput.current.blur();
     this.setState({ saved: false})
     trackPromise(
-      fetch(`https://iris-lp-scanner-server.herokuapp.com/search/${this.state.barcodeInput}`)
+      fetch(`https://iris-lp-scanner-server.herokuapp.com/search/${this.state.barcodeInput}`, { mode: 'cors' })
     )
       .then((response) => {
         return response.json();
@@ -104,6 +104,7 @@ class Search extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
+      mode: 'cors'
     })
       .then(response => {
         return response.text();
@@ -141,6 +142,7 @@ class Search extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
+      mode: 'cors'
     })
       .then(response => {
         return response.text();
