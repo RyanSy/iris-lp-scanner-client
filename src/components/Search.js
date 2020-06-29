@@ -18,7 +18,8 @@ class Search extends React.Component {
       item_variation_id: '',
       item_variation_version: '',
       item_state: '',
-      saved: false
+      saved: false,
+      error: false
     };
     this.searchInput = React.createRef();
     this.handleBarcodeInput = this.handleBarcodeInput.bind(this);
@@ -71,6 +72,9 @@ class Search extends React.Component {
         });
       })
       .catch((error) => {
+        this.setState({
+          error: true
+        });
         console.log('error searching for item\n');
         console.log(error);
       });
@@ -113,6 +117,9 @@ class Search extends React.Component {
         return response ? JSON.parse(response) : {};
       })
       .catch((error) => {
+        this.setState({
+          error: true
+        });
         console.log('error creating item');
         console.log(error);
       });
@@ -152,6 +159,9 @@ class Search extends React.Component {
         return response ? JSON.parse(response) : {};
       })
       .catch((error) => {
+        this.setState({
+          error: true
+        });
         console.log('error updating item\n');
         console.log(error);
       });
@@ -194,9 +204,22 @@ class Search extends React.Component {
   render() {
       return (
         <div>
+          {this.state.title === '' || this.state.title === 'Item not found' ?
+            <form>
+              <div className="ml-3 form-group row">
+                <input className="form-control col-3" type="text" name="barcode" value={this.state.barcodeInput} onChange={this.handleBarcodeInput} ref={this.searchInput} placeholder="Scan or enter barcode" />
+                <button className="btn btn-primary ml-1" onClick={this.searchForItem}>
+                  <svg className="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" d="M10.442 10.442a1 1 0 011.415 0l3.85 3.85a1 1 0 01-1.414 1.415l-3.85-3.85a1 1 0 010-1.415z" clipRule="evenodd"/>
+                    <path fillRule="evenodd" d="M6.5 12a5.5 5.5 0 100-11 5.5 5.5 0 000 11zM13 6.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z" clipRule="evenodd"/>
+                  </svg>
+                </button>
+              </div>
+            </form>
+          :
           <form>
             <div className="ml-3 form-group row">
-              <input className="form-control col-3" type="text" name="barcode" value={this.state.barcodeInput} onChange={this.handleBarcodeInput} ref={this.searchInput} placeholder="Scan or enter barcode" />
+              <input className="form-control col-3" type="text" name="barcode" value={this.state.barcodeInput} onChange={this.handleBarcodeInput} ref={this.searchInput} placeholder="Scan or enter barcode" disabled/>
               <button className="btn btn-primary ml-1" onClick={this.searchForItem}>
                 <svg className="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path fillRule="evenodd" d="M10.442 10.442a1 1 0 011.415 0l3.85 3.85a1 1 0 01-1.414 1.415l-3.85-3.85a1 1 0 010-1.415z" clipRule="evenodd"/>
@@ -205,6 +228,7 @@ class Search extends React.Component {
               </button>
             </div>
           </form>
+          }
 
           <Item
             title={this.state.title}
@@ -214,6 +238,7 @@ class Search extends React.Component {
             price={this.state.price}
             handleTitleValue={this.handleTitleValue} handlePriceValue={this.handlePriceValue} handleTotalQuantityValue={this.handleTotalQuantityValue} quantity_received={this.state.quantity_received} total_quantity={this.state.total_quantity}
             saved={this.state.saved}
+            error={this.state.error}
             create={this.create}
             update={this.update}
             cancel={this.cancel}

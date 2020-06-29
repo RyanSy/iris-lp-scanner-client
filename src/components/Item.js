@@ -9,6 +9,7 @@ class Item extends React.Component {
       price: this.props.price,
       quantity_received: 0,
       total_quantity: this.props.quantity,
+      error: this.props.error
     };
   }
 
@@ -18,7 +19,7 @@ class Item extends React.Component {
         {this.props.title && this.props.title !== 'Item not found' ?
           <form className="ml-3 mt-3">
             <div className="form-group row">
-              <img src={this.props.image_url} alt={this.props.title} height="300" width="300"></img>
+              <img src={this.props.image_url} alt={this.props.title} height="200" width="200"></img>
             </div>
             <div className="form-group row">
               <label className="col-form-label">
@@ -91,6 +92,14 @@ class Item extends React.Component {
         {this.props.title === 'Item not found' ?
           <div className="text-center mt-5">
             <h3>Item not found</h3>
+          </div>
+          :
+          null
+        }
+
+        {this.props.error === true ?
+          <div className="text-center mt-5">
+            <h3>An error occured, please contact the developer.</h3>
           </div>
           :
           null
