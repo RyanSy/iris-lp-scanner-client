@@ -68,6 +68,8 @@ class Item extends React.Component {
                 <input className="form-control col-2" type="number" name="price" min="0" value={this.props.price} onChange={this.props.handlePriceValue} />
               </div>
             </div>
+            <input type="hidden" name="item_variation_id" value={this.props.item_variation_id} />
+            <input type="hidden" name="item_variation_version" value={this.props.item_variation_version} />
             <div className="form-group row">
                 {this.props.item_variation_version ?
                 <button className="btn btn-primary mr-2" onClick={this.props.update}>Update </button>

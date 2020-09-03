@@ -236,9 +236,15 @@ class Search extends React.Component {
             barcode={this.state.barcode}
             quantity={this.state.quantity}
             price={this.state.price}
-            handleTitleValue={this.handleTitleValue} handlePriceValue={this.handlePriceValue} handleTotalQuantityValue={this.handleTotalQuantityValue} quantity_received={this.state.quantity_received} total_quantity={this.state.total_quantity}
+            handleTitleValue={this.handleTitleValue}
+            handlePriceValue={this.handlePriceValue}
+            handleTotalQuantityValue={this.handleTotalQuantityValue}
+            quantity_received={this.state.quantity_received}
+            total_quantity={this.state.total_quantity}
             saved={this.state.saved}
             error={this.state.error}
+            item_variation_id={this.state.item_variation_id}
+            item_variation_version={this.state.item_variation_version}
             create={this.create}
             update={this.update}
             cancel={this.cancel}
